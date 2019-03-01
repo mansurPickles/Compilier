@@ -21,6 +21,8 @@ bool isOperator(string str);
 void stateMachine(string str);
 string convertToString(int state, string str);
 
+void printAndCheck(string result, char c, int state);
+
 int stateFunctionTable [ROWLENGTH][COLUMNLENGTH];
 vector<string> keywords;
 vector<string> separator;
@@ -98,7 +100,7 @@ void initSeparator(){
     separator.push_back("[");
     separator.push_back("]");
     separator.push_back(",");
-//    separator.push_back(".");
+    //    separator.push_back(".");
     separator.push_back(":");
     separator.push_back(";");
     separator.push_back("!");
@@ -233,6 +235,7 @@ void stateMachine(string str){
     for (int i=0; i< size; i++){
         char c = str.at(i);
 
+
         //remove comments
         if (c=='!'){
             c = str.at(++i);
@@ -243,30 +246,25 @@ void stateMachine(string str){
             }
         }
 
+        else if(isSeparator(string(1,c))){
+
+            printAndCheck(result,c,state);
+            state = 0;
+            result.clear();
+        }
+
         //if DOT
         else if(c=='.'){
             state = stateFunctionTable[state][DOT];
             result+=c;
         }
 
-        else if(isSeparator(string(1,c))){
-            if (state!= FAILED){
 
-                cout  <<"STATE: " << convertToString(state, result) << "\t" << result << endl;
-            }
-
-            else {
-                cout << "failed state\n";
-            }
-            state = 0;
-            result.clear();
-        }
 
         else {
             int conversion = getType(c);
-
             state = stateFunctionTable[state][conversion];
-            cout << "type\t" << conversion << "\t" << c << "\t" << "state: " << state << endl;
+//                        cout << "type\t" << conversion << "\t" << c << "\t" << "state: " << state << endl;
             result+=c;
         }
 
@@ -274,8 +272,22 @@ void stateMachine(string str){
     }
 
     if (state!= FAILED){
-        cout << "STATE: " << convertToString(state, result) << "\t" << result << endl;
+        printAndCheck(result, ' ',  state);
     }
+}
+
+void printAndCheck(string result, char c, int state){
+    if (state!= FAILED){
+
+        if (state!=COMMENT)
+            cout <<"STATE: " << setw(SPACING) << convertToString(state, result) << setw(SPACING) << result << endl;
+
+        if (c != ' '){
+            cout  <<"STATE: " << setw(SPACING) << "SEPERATOR" << setw(SPACING) << c << endl;
+
+        }
+    }
+
     else {
         cout << "failed state\n";
     }

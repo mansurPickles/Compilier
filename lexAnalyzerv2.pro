@@ -8,4 +8,5 @@ SOURCES += \
 
 HEADERS += \
     constvalues.h \
-    lexanalyzer.h
+    lexanalyzer.h \
+    reader.h
