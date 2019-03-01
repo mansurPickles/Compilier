@@ -246,7 +246,7 @@ void stateMachine(string str){
             }
         }
 
-        else if(isSeparator(string(1,c))){
+        else if(isSeparator(string(1,c)) || isOperator(string(1,c))){
 
             printAndCheck(result,c,state);
             state = 0;
@@ -282,8 +282,13 @@ void printAndCheck(string result, char c, int state){
         if (state!=COMMENT)
             cout <<"STATE: " << setw(SPACING) << convertToString(state, result) << setw(SPACING) << result << endl;
 
-        if (c != ' '){
+        if (c != ' ' && isSeparator(string(1,c))){
             cout  <<"STATE: " << setw(SPACING) << "SEPERATOR" << setw(SPACING) << c << endl;
+
+        }
+
+        if (c != ' ' && isOperator(string(1,c))){
+            cout  <<"STATE: " << setw(SPACING) << "OPERATOR" << setw(SPACING) << c << endl;
 
         }
     }
