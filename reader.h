@@ -11,6 +11,8 @@
 using namespace std;
 
 void run(string fname){
+
+    //init 2d Array and Vectprs
     initArray();
 
     ifstream f(fname.c_str());
@@ -21,6 +23,9 @@ void run(string fname){
     }
 
     string str = "";
+
+    cout  <<"STATE: " << setw(SPACING) << "TOKENS" << setw(SPACING) << "Lexemes" << endl;
+
 
     while(!f.eof())
     {
