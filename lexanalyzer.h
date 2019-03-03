@@ -31,12 +31,15 @@ vector<string> operators;
 //start FUNCTIONS
 
 void initArray(){
+
+    //set 2d array to all fail states
     for (int i=0; i< ROWLENGTH; i++){
         for (int j=0; j< COLUMNLENGTH; j++){
             markEntry(i,j,FAILED);
         }
     }
 
+    //marking success states
     markEntry(0,ALPHA, ALPHA);
     markEntry(ALPHA,NUM,NUM);
     markEntry(0,NUM, NUM);
@@ -56,7 +59,7 @@ void initArray(){
     markEntry(REG,REG, REG);
     markEntry(DOT,NUM,DOT);
 
-
+    //init vectors
     initKeywords();
     initSeparator();
     initOperators();
@@ -228,7 +231,7 @@ string convertToString(int state, string str){
 }
 void stateMachine(string str){
     int size = str.size();
-    int state = 0;
+    int state = 0;      //set init state = 0
 
     string result = "";
 
@@ -246,9 +249,13 @@ void stateMachine(string str){
             }
         }
 
+        //end the state machine when finding a seperator or operator
         else if(isSeparator(string(1,c)) || isOperator(string(1,c))){
 
+            //print result
             printAndCheck(result,c,state);
+
+            //reset state and result
             state = 0;
             result.clear();
         }
@@ -260,14 +267,13 @@ void stateMachine(string str){
         }
 
 
-
+        //keep running the state machine and add it to result(string)
         else {
             int conversion = getType(c);
             state = stateFunctionTable[state][conversion];
-//                        cout << "type\t" << conversion << "\t" << c << "\t" << "state: " << state << endl;
+            //cout << "type\t" << conversion << "\t" << c << "\t" << "state: " << state << endl;
             result+=c;
         }
-
 
     }
 
@@ -279,14 +285,17 @@ void stateMachine(string str){
 void printAndCheck(string result, char c, int state){
     if (state!= FAILED){
 
+        //if its not a comment print
         if (state!=COMMENT)
             cout <<"STATE: " << setw(SPACING) << convertToString(state, result) << setw(SPACING) << result << endl;
 
+        //if its a seperator print that after
         if (c != ' ' && isSeparator(string(1,c))){
             cout  <<"STATE: " << setw(SPACING) << "SEPERATOR" << setw(SPACING) << c << endl;
 
         }
 
+        //if its an operator print that after
         if (c != ' ' && isOperator(string(1,c))){
             cout  <<"STATE: " << setw(SPACING) << "OPERATOR" << setw(SPACING) << c << endl;
 

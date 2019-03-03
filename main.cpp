@@ -10,14 +10,8 @@ using namespace std;
 int main(int argc,char *argv[])
 {
 
-string str = argv[1];
-run(str);
-
-//printTable();
-
-//string str = "seperate this please 123 ! ! int {abc$ 32.0111;} if else";
-
-//stateMachine(str);
-cout << "f1inished\n\n\n";
+    //get the string from the commandline and pass to run
+    string str = argv[1];
+    run(str);
 
 }
