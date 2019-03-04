@@ -23,8 +23,7 @@ void run(string fname){
     }
 
     string str = "";
-
-    cout  <<"STATE: " << setw(SPACING) << "TOKENS" << setw(SPACING) << "Lexemes" << endl << endl;
+    cout  << left << setw(SPACING) << "TOKENS" << left << setw(SPACING) << "=" << left << setw(SPACING) << "Lexemes" << endl << endl;
 
 
     while(!f.eof())

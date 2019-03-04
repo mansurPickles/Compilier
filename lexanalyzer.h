@@ -207,19 +207,25 @@ string convertToString(int state, string str){
         return "COMMENT";
     }
 
+    //all valid states
     else if (state==NUM || state==ALPHA || state==REG || state==DOT){
+
+        //KEYWORD
         if (isKeyword(str)){
             return "KEYWORD";
         }
 
+        //DOUBLE
         if (state==DOT){
             return "REAL";
         }
 
-        if (state==NUM){
+        //INTEGER checks to see if state is NUM and if the first char in the string is a number
+        if (state==NUM && isnumber(str.at(0)) ){
             return "INTEGER";
         }
 
+        //ID
         else {
             return "IDENTIFIER";
         }
@@ -302,18 +308,18 @@ void printAndCheck(string result, char c, int state){
         //if its not a comment print
         if (state!=COMMENT){
 
-            cout <<"STATE: " << setw(SPACING) << convertToString(state, result) << setw(SPACING) << result << endl;
+            cout << left << setw(SPACING) << convertToString(state, result)  <<left <<  setw(SPACING) << "="  << left << setw(SPACING) << result << endl;
         }
 
         //if its a seperator print that after
         if (c != ' ' && isSeparator(string(1,c))){
-            cout  <<"STATE: " << setw(SPACING) << "SEPERATOR" << setw(SPACING) << c << endl;
+            cout  << left << setw(SPACING) << "SEPERATOR"  << left << setw(SPACING) << "="   << left << setw(SPACING) << c << endl;
 
         }
 
         //if its an operator print that after
         if (c != ' ' && isOperator(string(1,c))){
-            cout  <<"STATE: " << setw(SPACING) << "OPERATOR" << setw(SPACING) << c << endl;
+            cout  << left << setw(SPACING) << "OPERATOR" << left << setw(SPACING) << "=" << left << setw(SPACING) << c << endl;
 
         }
     }
