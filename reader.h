@@ -24,7 +24,7 @@ void run(string fname){
 
     string str = "";
 
-    cout  <<"STATE: " << setw(SPACING) << "TOKENS" << setw(SPACING) << "Lexemes" << endl;
+    cout  <<"STATE: " << setw(SPACING) << "TOKENS" << setw(SPACING) << "Lexemes" << endl << endl;
 
 
     while(!f.eof())

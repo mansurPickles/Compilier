@@ -110,6 +110,7 @@ void initSeparator(){
     separator.push_back(" ");
     separator.push_back("sp");
     separator.push_back("(space)");
+    separator.push_back("\n");
 
 }
 void printTable(){
@@ -211,10 +212,19 @@ string convertToString(int state, string str){
             return "KEYWORD";
         }
 
+        if (state==DOT){
+            return "REAL";
+        }
+
+        if (state==NUM){
+            return "INTEGER";
+        }
+
         else {
             return "IDENTIFIER";
         }
     }
+
 
     else if (state==OPERATOR){
         return "OPEARATOR";
@@ -257,7 +267,7 @@ void stateMachine(string str){
 
             //reset state and result
             state = 0;
-            result.clear();
+            result = "";
         }
 
         //if DOT
@@ -271,8 +281,11 @@ void stateMachine(string str){
         else {
             int conversion = getType(c);
             state = stateFunctionTable[state][conversion];
-            //cout << "type\t" << conversion << "\t" << c << "\t" << "state: " << state << endl;
-            result+=c;
+
+            //remove all unnecessary spaces
+            if (c!=' ' && c!='\t' && c!='\n'){
+                result+=c;
+            }
         }
 
     }
@@ -283,11 +296,14 @@ void stateMachine(string str){
 }
 
 void printAndCheck(string result, char c, int state){
+
     if (state!= FAILED){
 
         //if its not a comment print
-        if (state!=COMMENT)
+        if (state!=COMMENT){
+
             cout <<"STATE: " << setw(SPACING) << convertToString(state, result) << setw(SPACING) << result << endl;
+        }
 
         //if its a seperator print that after
         if (c != ' ' && isSeparator(string(1,c))){

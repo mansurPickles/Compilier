@@ -17,7 +17,7 @@ int const REG = 6;
 int const COMMA = 7;
 int const FAILED = 9;
 int const COMMENT = 0;
-int const SPACING = 35;
+int const SPACING = 45;
 
 
 #endif // CONSTVALUES_H
