@@ -309,14 +309,14 @@ void printAndCheck(string result, char c, int state){
 
         //if its not a comment print
         if (state!=COMMENT){
-            Token a (result,state);
+            Token a (result,convertToString(state, result));
             cout << a;
 //            cout << left << setw(SPACING) << convertToString(state, result)  <<left <<  setw(SPACING) << "="  << left << setw(SPACING) << result << endl;
         }
 
         //if its a seperator print that after
         if (c != ' ' && isSeparator(string(1,c))){
-            Token a (string(1,c), OPERATOR);
+            Token a (string(1,c), "SEPERATOR");
             cout << a;
 //            cout  << left << setw(SPACING) << "SEPERATOR"  << left << setw(SPACING) << "="   << left << setw(SPACING) << c << endl;
 
@@ -325,7 +325,7 @@ void printAndCheck(string result, char c, int state){
         //if its an operator print that after
         if (c != ' ' && isOperator(string(1,c))){
 
-            Token a (string(1,c), OPERATOR);
+            Token a (string(1,c), "OPERATOR");
             cout << a;
 //            cout  << left << setw(SPACING) << "OPERATOR" << left << setw(SPACING) << "=" << left << setw(SPACING) << c << endl;
 

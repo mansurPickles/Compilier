@@ -18,17 +18,16 @@ int const REG = 6;
 int const COMMA = 7;
 int const FAILED = 9;
 int const COMMENT = 0;
+
+int const SEPERATOR = 11;
+int const REAL = 12;
+int const IDENTIFIER  = 13;
+int const KEYWORD = 14;
+int const INTEGER = 15;
+
 int const SPACING = 20;
 int const SMALLSPACING = 10;
-int const SEPERATOR = 11;
 
-string getStringfromType(int type){
-    switch(type){
-    case 1:
 
-    default:
-        return "";
-    }
-}
 
 #endif // CONSTVALUES_H

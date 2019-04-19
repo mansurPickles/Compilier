@@ -13,5 +13,5 @@ int main(int argc,char *argv[])
     //get the string from the commandline and pass to run
     string str = argv[1];
     run(str);
-
+    cout << "updated and finished\n";
 }
