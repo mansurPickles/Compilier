@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -19,6 +20,15 @@ int const FAILED = 9;
 int const COMMENT = 0;
 int const SPACING = 20;
 int const SMALLSPACING = 10;
+int const SEPERATOR = 11;
 
+string getStringfromType(int type){
+    switch(type){
+    case 1:
+
+    default:
+        return "";
+    }
+}
 
 #endif // CONSTVALUES_H

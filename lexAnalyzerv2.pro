@@ -9,4 +9,5 @@ SOURCES += \
 HEADERS += \
     constvalues.h \
     lexanalyzer.h \
-    reader.h
+    reader.h \
+    token.h
