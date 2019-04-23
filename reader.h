@@ -26,17 +26,28 @@ void run(string fname){
     string str = "";
     cout  << left << setw(SPACING) << "TOKENS" << left << setw(SPACING) << "=" << left << setw(SPACING) << "Lexemes" << endl << endl;
 
-
+    //main loop
     while(!f.eof())
     {
 
         getline(f,str);
         vector<Token> tk = stateMachine(str);
+        Token temp ("$", "$");
+        tk.push_back(temp);
+
         cout << "after getline\n";
 
         for (int i=0; i< tk.size(); i++){
             cout << tk.at(i) << "\n";
         }
+
+        //NEED TO DO
+
+        //syntaxAnalyzer (vector<Token> vt);
+
+        //string S = "A+B=C$"
+
+
     }
 
     f.close();
