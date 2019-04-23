@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include "token.h"
 using namespace std;
 
 void run(string fname){
@@ -30,7 +31,12 @@ void run(string fname){
     {
 
         getline(f,str);
-        stateMachine(str);
+        vector<Token> tk = stateMachine(str);
+        cout << "after getline\n";
+
+        for (int i=0; i< tk.size(); i++){
+            cout << tk.at(i) << "\n";
+        }
     }
 
     f.close();

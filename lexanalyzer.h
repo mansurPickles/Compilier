@@ -20,10 +20,10 @@ int getType (char c);
 bool isKeyword(string str);
 bool isSeparator(string str);
 bool isOperator(string str);
-void stateMachine(string str);
+vector <Token> stateMachine(string str);
 string convertToString(int state, string str);
 
-void printAndCheck(string result, char c, int state);
+Token printAndCheck(string result, char c, int state);
 
 int stateFunctionTable [ROWLENGTH][COLUMNLENGTH];
 vector<string> keywords;
@@ -247,7 +247,8 @@ string convertToString(int state, string str){
     }
 
 }
-void stateMachine(string str){
+vector <Token> stateMachine(string str){
+    vector<Token> vt;
     int size = str.size();
     int state = 0;      //set init state = 0
 
@@ -271,7 +272,11 @@ void stateMachine(string str){
         else if(isSeparator(string(1,c)) || isOperator(string(1,c))){
 
             //print result
-            printAndCheck(result,c,state);
+            Token temp = printAndCheck(result,c,state);
+
+            if(temp.getType() != "FAILED"){
+            vt.push_back(temp);
+            }
 
             //reset state and result
             state = 0;
@@ -299,25 +304,32 @@ void stateMachine(string str){
     }
 
     if (state!= FAILED){
-        printAndCheck(result, ' ',  state);
+        Token temp = printAndCheck(result, ' ',  state);
+
+        if(temp.getType() != "FAILED"){
+        vt.push_back(temp);
+        }
     }
+
+    return vt;
 }
 
-void printAndCheck(string result, char c, int state){
-
+Token printAndCheck(string result, char c, int state){
     if (state!= FAILED){
 
         //if its not a comment print
         if (state!=COMMENT){
-            Token a (result,convertToString(state, result));
-            cout << a;
+            Token tk (result,convertToString(state, result));
+            cout << tk;
+            return tk;
 //            cout << left << setw(SPACING) << convertToString(state, result)  <<left <<  setw(SPACING) << "="  << left << setw(SPACING) << result << endl;
         }
 
         //if its a seperator print that after
         if (c != ' ' && isSeparator(string(1,c))){
-            Token a (string(1,c), "SEPERATOR");
-            cout << a;
+            Token tk (string(1,c), "SEPERATOR");
+            cout << tk;
+            return tk;
 //            cout  << left << setw(SPACING) << "SEPERATOR"  << left << setw(SPACING) << "="   << left << setw(SPACING) << c << endl;
 
         }
@@ -325,16 +337,23 @@ void printAndCheck(string result, char c, int state){
         //if its an operator print that after
         if (c != ' ' && isOperator(string(1,c))){
 
-            Token a (string(1,c), "OPERATOR");
-            cout << a;
+            Token tk (string(1,c), "OPERATOR");
+            cout << tk;
+            return tk;
 //            cout  << left << setw(SPACING) << "OPERATOR" << left << setw(SPACING) << "=" << left << setw(SPACING) << c << endl;
 
         }
+
     }
 
     else {
         cout << "failed state\n";
+        Token tk ("FAILED", "FAILED");
+        return tk;
     }
+
+    Token tk ("FAILED", "FAILED");
+    return tk;
 }
 
 #endif // LEXANALYZER_H

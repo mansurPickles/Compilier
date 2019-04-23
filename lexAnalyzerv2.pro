@@ -11,4 +11,5 @@ HEADERS += \
     constvalues.h \
     lexanalyzer.h \
     reader.h \
+    syntaxanalyzer.h \
     token.h
