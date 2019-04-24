@@ -9,9 +9,14 @@
 #include <string>
 #include <fstream>
 #include "token.h"
+#include "syntaxanalyzer.h"
 using namespace std;
 
 void run(string fname){
+
+    initPredictableTable();
+    printPredictionTable();
+    return;
 
     //init 2d Array and Vectprs
     initArray();

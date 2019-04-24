@@ -28,9 +28,6 @@ int const INTEGER = 15;
 int const SPACING = 20;
 int const SMALLSPACING = 10;
 
-vector<string> productionRules;
-
-
 string const rule0 = "FAILED";
 string const rule1 = "i=e";
 string const rule2 = "TQ";
@@ -43,6 +40,10 @@ string const rule8 = "/FR";
 string const rule9 = "epsilon";
 string const rule10 = "(E)";
 string const rule11 = "i";
+
+
+vector<string> productionRules = {rule0, rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11};
+
 
 
 
