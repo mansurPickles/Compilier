@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include "token.h"
+#include <stack>
 
 using namespace std;
 
@@ -123,7 +124,22 @@ void printPredictionTable(){
     }
 }
 
+bool syntaxAnalyzer(vector<Token> tk){
+    bool result = false;
+    stack<char> s1;
+    int size = tk.size();
+    s1.push('$');
+    s1.push('S');
+    int index = 0;
+    while(!s1.empty()){
+        if (s1.top()=='$' && tk.at(index).getContent()=="$"){
+            result = true;
+            return result;
+        }
+    }
 
+
+}
 
 
 #endif // SYNTAXANALYZER_H

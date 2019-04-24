@@ -275,7 +275,7 @@ vector <Token> stateMachine(string str){
             Token temp = printAndCheck(result,c,state);
 
             if(temp.getType() != "FAILED"){
-            vt.push_back(temp);
+                vt.push_back(temp);
             }
 
             //reset state and result
@@ -307,7 +307,7 @@ vector <Token> stateMachine(string str){
         Token temp = printAndCheck(result, ' ',  state);
 
         if(temp.getType() != "FAILED"){
-        vt.push_back(temp);
+            vt.push_back(temp);
         }
     }
 
@@ -322,16 +322,24 @@ Token printAndCheck(string result, char c, int state){
             Token tk (result,convertToString(state, result));
             cout << tk;
             return tk;
-//            cout << left << setw(SPACING) << convertToString(state, result)  <<left <<  setw(SPACING) << "="  << left << setw(SPACING) << result << endl;
+            //            cout << left << setw(SPACING) << convertToString(state, result)  <<left <<  setw(SPACING) << "="  << left << setw(SPACING) << result << endl;
         }
 
         //if its a seperator print that after
         if (c != ' ' && isSeparator(string(1,c))){
-            Token tk (string(1,c), "SEPERATOR");
-            cout << tk;
-            return tk;
-//            cout  << left << setw(SPACING) << "SEPERATOR"  << left << setw(SPACING) << "="   << left << setw(SPACING) << c << endl;
 
+            if (c==';'){
+                Token tk ("$", "SEPERATOR");
+
+            }
+            else {
+                Token tk (string(1,c), "SEPERATOR");
+                cout << tk;
+                return tk;
+
+                //            cout  << left << setw(SPACING) << "SEPERATOR"  << left << setw(SPACING) << "="   << left << setw(SPACING) << c << endl;
+
+            }
         }
 
         //if its an operator print that after
@@ -340,7 +348,7 @@ Token printAndCheck(string result, char c, int state){
             Token tk (string(1,c), "OPERATOR");
             cout << tk;
             return tk;
-//            cout  << left << setw(SPACING) << "OPERATOR" << left << setw(SPACING) << "=" << left << setw(SPACING) << c << endl;
+            //            cout  << left << setw(SPACING) << "OPERATOR" << left << setw(SPACING) << "=" << left << setw(SPACING) << c << endl;
 
         }
 
