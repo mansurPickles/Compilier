@@ -8,6 +8,7 @@
 #include <string>
 #include "token.h"
 #include <stack>
+#include <unistd.h>
 
 using namespace std;
 
@@ -27,7 +28,7 @@ int const RIGHTB = 5;
 int const ID = 6;
 int const DOLLAR = 7;
 const vector<char> CAPROW = {'S','E','Q','T','R','F'};
-const vector<string> TERMINALROW = {"*","+","-","/","(",")","id","$"};
+const vector<string> TERMINALROW = {"*","+","-","/","(",")","i","$"};
 
 
 bool ruleS(stack<string> & s1, vector<Token> & tk, int &index);
@@ -58,8 +59,9 @@ int convertNonterminaltoInt(string str){
     }
     return index;
 }
+
 int convertTokenInputtoRow(Token tk){
-    string str = tk.getType();
+    string str = tk.getContent();
     char iCheck = str.at(0);
 
     if (isalpha(iCheck)){
@@ -193,35 +195,80 @@ bool syntaxAnalyzer(vector<Token> tk) {
     stack<string> s1;
     int size = tk.size();
 
+
     if (tk.size() == 0){
         return true;
     }
+
 
     //init stack by pushing $ and S
     s1.push("$");
     s1.push("S");
     showstack(s1);
 
-    //get the predictive table row from stack
-    int rowLookUp = convertNonterminaltoInt(s1.top());
-    s1.pop();       //now pop it
+    while(!s1.empty()){
 
-    //get the predictive table column from token (input)
-    int columnLookup = convertTokenInputtoRow(tk.at(index));
+        cout << "BEGIN\n";
+        cout << "token: " << tk.at(index).getContent() << endl;
+        cout << "top of stack: " << s1.top() << endl;
+        // top of stack == $ AND last token == $
+        if (tk.at(index).getContent() == "$" && s1.top() == "$"){
+            return true;
+        }
 
-    //print it (DEBUG ONLY)
-    cout << "row " << rowLookUp << " column " << columnLookup << endl;
+        //top of stack matches token(index)
+        else if (tk.at(index).getContent() == s1.top()){
+            cout << "matched token and stack \n";
 
-    //rule number to apply
-    int temprule = predictiveTable[rowLookUp][columnLookup];
+            s1.pop();
+            index++;
+        }
 
-    cout << "rule " << productionRules.at(temprule) << endl;
+        else if (tk.at(index).getType() == "IDENTIFIER" && s1.top()=="i"){
+            cout << "found ID\n";
 
-    //add the rule to the stack in reverse order
-    reverseInputStack(s1, productionRules.at(temprule));
-    showstack(s1);
+            s1.pop();
+            index++;
+        }
 
-    return true;
+        else if (s1.top() == "EPSILON"){
+            cout << "found EPSILON\n";
+            s1.pop();
+        }
+
+        else{
+            cout << "else\n";
+
+            //get the predictive table row from stack
+            int rowLookUp = convertNonterminaltoInt(s1.top());
+            s1.pop();       //now pop it
+
+            //get the predictive table column from token (input)
+            int columnLookup = convertTokenInputtoRow(tk.at(index));
+
+            //print it (DEBUG ONLY)
+            cout << "row " << rowLookUp << " column " << columnLookup << endl;
+
+            //rule number to apply
+            int temprule = predictiveTable[rowLookUp][columnLookup];
+
+            cout << "rule " << productionRules.at(temprule) << endl;
+
+            if(productionRules.at(temprule) == "epsilon"){
+                s1.push("EPSILON");
+            }
+            else {
+                //add the rule to the stack in reverse order
+                reverseInputStack(s1, productionRules.at(temprule));
+                showstack(s1);
+            }
+        }
+        sleep(1);
+    }
+
+
+
+    return result;
 
 
     //now messing with stack
