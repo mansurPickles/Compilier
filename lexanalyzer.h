@@ -329,7 +329,8 @@ Token printAndCheck(string result, char c, int state){
         if (c != ' ' && isSeparator(string(1,c))){
 
             if (c==';'){
-                Token tk ("$", "SEPERATOR");
+                Token tk ("$", "$");
+                return tk;
 
             }
             else {

@@ -44,9 +44,17 @@ void run(string fname){
             cout << tk.at(i) << "\n";
         }
 
+        if (syntaxAnalyzer(tk) == true){
+            cout << "accepted\n";
+        }
+
+        else{
+            cout << "failed\n";
+        }
+
         //NEED TO DO
 
-        //syntaxAnalyzer (vector<Token> vt);
+//        syntaxAnalyzer (tk);
 
         //string S = "A+B=C$"
 

@@ -27,11 +27,63 @@ int const RIGHTB = 5;
 int const ID = 6;
 int const DOLLAR = 7;
 const vector<char> CAPROW = {'S','E','Q','T','R','F'};
+const vector<string> TERMINALROW = {"*","+","-","/","(",")","id","$"};
 
 
+bool ruleS(stack<string> & s1, vector<Token> & tk, int &index);
+
+bool ruleE(stack<string> & s1, vector<Token> & tk, int &index);
 
 
 int predictiveTable [F+1][DOLLAR+1];
+
+
+
+//bool ruleQ(stack<string> & s1, vector<Token> & tk, int &index);
+
+//bool ruleT(stack<string> & s1, vector<Token> & tk, int &index);
+
+//bool ruleR(stack<string> & s1, vector<Token> & tk, int &index);
+
+//bool ruleF(stack<string> & s1, vector<Token> & tk, int &index);
+
+int convertNonterminaltoInt(string str){
+    int index = -1;
+
+    for (int i=0; i< CAPROW.size(); i++){
+        if (str.at(0) == CAPROW.at(i)){
+            index = i;
+            return i;
+        }
+    }
+    return index;
+}
+int convertTokenInputtoRow(Token tk){
+    string str = tk.getType();
+    char iCheck = str.at(0);
+
+    if (isalpha(iCheck)){
+        return 6;
+    }
+
+    else {
+
+        int index = -1;
+        for (int i=0; i< TERMINALROW.size(); i++){
+            if (str == TERMINALROW.at(i)){
+                return i;
+            }
+        }
+
+        return index;
+    }
+}
+void reverseInputStack(stack<string> &s1, string str){
+    for (int i=str.size()-1; i>= 0; i--){
+        s1.push(str.substr(i,1));
+        cout << "pushed " << str.substr(i,1) << endl;
+    }
+}
 
 void initPredictableTable(){
     for (int i=0; i< F+1; i++){
@@ -70,13 +122,11 @@ void initPredictableTable(){
     ////table entry 10 [R][*] R -> *FR
     predictiveTable[R][STAR] = 7;
 
-
     ////table entry 10 [R][+] R -> epsilon
     predictiveTable[R][PLUS] = 9;
 
     ////table entry 11[R][-] R -> epsilon
     predictiveTable[R][MINUS] = 9;
-
 
     ////table entry 12 [R][/] R -> /FR
     predictiveTable[R][DIV] = 8;
@@ -124,22 +174,107 @@ void printPredictionTable(){
     }
 }
 
-bool syntaxAnalyzer(vector<Token> tk){
-    bool result = false;
-    stack<char> s1;
-    int size = tk.size();
-    s1.push('$');
-    s1.push('S');
+void showstack(stack <string> s)
+{
+
+    cout << "\nPRINTING CURRENT STACK\n";
+    while (!s.empty())
+    {
+        cout <<  s.top() << endl;
+        s.pop();
+    }
+    cout << '\n';
+}
+
+bool syntaxAnalyzer(vector<Token> tk) {
+
     int index = 0;
-    while(!s1.empty()){
-        if (s1.top()=='$' && tk.at(index).getContent()=="$"){
-            result = true;
-            return result;
-        }
+    bool result = false;
+    stack<string> s1;
+    int size = tk.size();
+
+    if (tk.size() == 0){
+        return true;
     }
 
+    //init stack by pushing $ and S
+    s1.push("$");
+    s1.push("S");
+    showstack(s1);
+
+    //get the predictive table row from stack
+    int rowLookUp = convertNonterminaltoInt(s1.top());
+    s1.pop();       //now pop it
+
+    //get the predictive table column from token (input)
+    int columnLookup = convertTokenInputtoRow(tk.at(index));
+
+    //print it (DEBUG ONLY)
+    cout << "row " << rowLookUp << " column " << columnLookup << endl;
+
+    //rule number to apply
+    int temprule = predictiveTable[rowLookUp][columnLookup];
+
+    cout << "rule " << productionRules.at(temprule) << endl;
+
+    //add the rule to the stack in reverse order
+    reverseInputStack(s1, productionRules.at(temprule));
+    showstack(s1);
+
+    return true;
+
+
+    //now messing with stack
+
+    cout << "end of token :" << tk.at(tk.size()-1).getContent() << endl;
+
+    if (tk.at(tk.size()-1).getContent() != "$"){
+        tk.push_back(Token("$", "$"));
+    }
 
 }
 
 
+
+
+//bool rulesS(stack<string> & s1, vector<Token> & tk, int &index){
+//    string str = s1.top();
+//    string tokenContent = tk.at(index).getContent();
+//    char iCheck = char(tokenContent.at(0));
+
+//    if (isalpha(iCheck) && s1.top() == "i"){
+//        s1.pop();
+//        index++;
+//    }
+
+//    if (tokenContent == tk.at(index).getContent()){
+//        s1.pop();
+//        index++;
+//    }
+
+//    if (tokenContent == "E"){
+//        s1.pop();
+//        return ruleE(s1, tk, index);
+//    }
+
+//    else {
+//        return false;
+//    }
+//}
+
+//bool rulesE(stack<string> & s1, vector<Token> & tk, int &index){
+//    string str = s1.top();
+//    string tokenContent = tk.at(index).getContent();
+//    char iCheck = char(tokenContent.at(0));
+
+//    if (tokenContent == "("){
+//        s1.pop();
+//    }
+
+//    if (isalpha(iCheck) && s1.top() == "i"){
+
+//    }
+
+//    return false;
+//}
 #endif // SYNTAXANALYZER_H
