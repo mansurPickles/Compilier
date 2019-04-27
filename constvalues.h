@@ -6,6 +6,7 @@
 #include <string>
 
 using namespace std;
+int debug = 0;
 
 int const ROWLENGTH = 10;
 int const COLUMNLENGTH = 10;

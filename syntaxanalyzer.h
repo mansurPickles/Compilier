@@ -39,15 +39,6 @@ bool ruleE(stack<string> & s1, vector<Token> & tk, int &index);
 int predictiveTable [F+1][DOLLAR+1];
 
 
-
-//bool ruleQ(stack<string> & s1, vector<Token> & tk, int &index);
-
-//bool ruleT(stack<string> & s1, vector<Token> & tk, int &index);
-
-//bool ruleR(stack<string> & s1, vector<Token> & tk, int &index);
-
-//bool ruleF(stack<string> & s1, vector<Token> & tk, int &index);
-
 int convertNonterminaltoInt(string str){
     int index = -1;
 
@@ -83,7 +74,7 @@ int convertTokenInputtoRow(Token tk){
 void reverseInputStack(stack<string> &s1, string str){
     for (int i=str.size()-1; i>= 0; i--){
         s1.push(str.substr(i,1));
-        cout << "pushed " << str.substr(i,1) << endl;
+        //        cout << "pushed " << str.substr(i,1) << endl;
     }
 }
 
@@ -212,9 +203,11 @@ bool syntaxAnalyzer(vector<Token> tk) {
 
     while(!s1.empty()){
 
-        cout << "BEGIN\n";
-        cout << "token: " << tk.at(index).getContent() << endl;
-        cout << "top of stack: " << s1.top() << endl;
+
+        cout << "token: " << tk.at(index) << endl;
+        if (debug){
+            cout << "top of stack: " << s1.top() << endl;
+        }
         // top of stack == $ AND last token == $
         if (tk.at(index).getContent() == "$" && s1.top() == "$"){
             return true;
@@ -222,27 +215,33 @@ bool syntaxAnalyzer(vector<Token> tk) {
 
         //top of stack matches token(index)
         else if (tk.at(index).getContent() == s1.top()){
-            cout << "matched token and stack \n";
-
+            if (debug){
+                cout << "matched token and stack \n";
+            }
             s1.pop();
             index++;
         }
 
         else if (tk.at(index).getType() == "IDENTIFIER" && s1.top()=="i"){
-            cout << "found ID\n";
-
+            if (debug){
+                cout << "found ID\n";
+            }
             s1.pop();
             index++;
         }
 
         else if (s1.top() == "EPSILON"){
-            cout << "found EPSILON\n";
+            if (debug){
+                cout << "found EPSILON\n";
+            }
             s1.pop();
         }
 
         else{
-            cout << "else\n";
 
+            if (debug){
+                cout << "else\n";
+            }
             //get the predictive table row from stack
             int rowLookUp = convertNonterminaltoInt(s1.top());
             s1.pop();       //now pop it
@@ -250,13 +249,15 @@ bool syntaxAnalyzer(vector<Token> tk) {
             //get the predictive table column from token (input)
             int columnLookup = convertTokenInputtoRow(tk.at(index));
 
-            //print it (DEBUG ONLY)
-            cout << "row " << rowLookUp << " column " << columnLookup << endl;
-
+            if (debug){
+                cout << "row " << rowLookUp << " column " << columnLookup << endl;
+            }
             //rule number to apply
             int temprule = predictiveTable[rowLookUp][columnLookup];
 
-            cout << "rule " << productionRules.at(temprule) << endl;
+            cout << CAPROW.at(rowLookUp) << " --> ";
+
+            cout << productionRules.at(temprule) << endl;
 
             if(productionRules.at(temprule) == "epsilon"){
                 s1.push("EPSILON");
@@ -264,7 +265,9 @@ bool syntaxAnalyzer(vector<Token> tk) {
             else {
                 //add the rule to the stack in reverse order
                 reverseInputStack(s1, productionRules.at(temprule));
-                showstack(s1);
+                if (debug){
+                    showstack(s1);
+                }
             }
         }
 
@@ -273,10 +276,7 @@ bool syntaxAnalyzer(vector<Token> tk) {
 
     }
 
-
-
     return result;
-
 
 }
 

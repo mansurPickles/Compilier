@@ -38,11 +38,12 @@ void run(string fname){
         Token temp ("$", "$");
         tk.push_back(temp);
 
+        if (debug){
+            cout << "after getline\n";
 
-        cout << "after getline\n";
-
-        for (int i=0; i< tk.size(); i++){
-            cout << tk.at(i) << "\n";
+            for (int i=0; i< tk.size(); i++){
+                cout << tk.at(i) << "\n";
+            }
         }
 
         if (syntaxAnalyzer(tk) == true){
