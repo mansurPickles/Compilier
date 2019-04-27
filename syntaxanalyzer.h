@@ -200,6 +200,10 @@ bool syntaxAnalyzer(vector<Token> tk) {
         return true;
     }
 
+    if (tk.size() == 1 && tk.at(0).getType() == "$"){
+        return true;
+    }
+
 
     //init stack by pushing $ and S
     s1.push("$");
@@ -263,7 +267,10 @@ bool syntaxAnalyzer(vector<Token> tk) {
                 showstack(s1);
             }
         }
+
         sleep(1);
+
+
     }
 
 
@@ -271,57 +278,7 @@ bool syntaxAnalyzer(vector<Token> tk) {
     return result;
 
 
-    //now messing with stack
-
-    cout << "end of token :" << tk.at(tk.size()-1).getContent() << endl;
-
-    if (tk.at(tk.size()-1).getContent() != "$"){
-        tk.push_back(Token("$", "$"));
-    }
-
 }
 
 
-
-
-//bool rulesS(stack<string> & s1, vector<Token> & tk, int &index){
-//    string str = s1.top();
-//    string tokenContent = tk.at(index).getContent();
-//    char iCheck = char(tokenContent.at(0));
-
-//    if (isalpha(iCheck) && s1.top() == "i"){
-//        s1.pop();
-//        index++;
-//    }
-
-//    if (tokenContent == tk.at(index).getContent()){
-//        s1.pop();
-//        index++;
-//    }
-
-//    if (tokenContent == "E"){
-//        s1.pop();
-//        return ruleE(s1, tk, index);
-//    }
-
-//    else {
-//        return false;
-//    }
-//}
-
-//bool rulesE(stack<string> & s1, vector<Token> & tk, int &index){
-//    string str = s1.top();
-//    string tokenContent = tk.at(index).getContent();
-//    char iCheck = char(tokenContent.at(0));
-
-//    if (tokenContent == "("){
-//        s1.pop();
-//    }
-
-//    if (isalpha(iCheck) && s1.top() == "i"){
-
-//    }
-
-//    return false;
-//}
 #endif // SYNTAXANALYZER_H

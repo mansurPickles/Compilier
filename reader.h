@@ -38,6 +38,7 @@ void run(string fname){
         Token temp ("$", "$");
         tk.push_back(temp);
 
+
         cout << "after getline\n";
 
         for (int i=0; i< tk.size(); i++){
@@ -45,19 +46,14 @@ void run(string fname){
         }
 
         if (syntaxAnalyzer(tk) == true){
-            cout << "accepted\n";
+
+            cout << "\n======================" << "ACCEPTED======================\n\n";
         }
 
         else{
+            exit (-1);
             cout << "failed\n";
         }
-
-        //NEED TO DO
-
-//        syntaxAnalyzer (tk);
-
-        //string S = "A+B=C$"
-
 
     }
 
