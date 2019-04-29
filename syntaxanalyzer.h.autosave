@@ -266,6 +266,7 @@ bool syntaxAnalyzer(vector<Token> tk) {
             else if(productionRules.at(temprule) == "FAILED"){
                 return false;
             }
+            
             else {
                 //add the rule to the stack in reverse order
                 reverseInputStack(s1, productionRules.at(temprule));

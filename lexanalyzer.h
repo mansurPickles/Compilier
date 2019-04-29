@@ -278,6 +278,7 @@ vector <Token> stateMachine(string str){
                 vt.push_back(temp);
             }
 
+
             //reset state and result
             state = 0;
             result = "";
