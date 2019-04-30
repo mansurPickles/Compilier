@@ -1,0 +1,289 @@
+#ifndef SYNTAXANALYZER_H
+#define SYNTAXANALYZER_H
+#include <iostream>
+#include <iomanip>
+#include "constvalues.h"
+#include <iomanip>
+#include <vector>
+#include <string>
+#include "token.h"
+#include <stack>
+#include <unistd.h>
+
+using namespace std;
+
+int const FAIL = 0;
+int const S = 0;
+int const E = 1;
+int const Q = 2;
+int const T = 3;
+int const R = 4;
+int const F = 5;
+int const STAR = 0;
+int const PLUS = 1;
+int const MINUS = 2;
+int const DIV = 3;
+int const LEFTB = 4;
+int const RIGHTB = 5;
+int const ID = 6;
+int const DOLLAR = 7;
+const vector<char> CAPROW = {'S','E','Q','T','R','F'};
+const vector<string> TERMINALROW = {"*","+","-","/","(",")","i","$"};
+
+
+bool ruleS(stack<string> & s1, vector<Token> & tk, int &index);
+
+bool ruleE(stack<string> & s1, vector<Token> & tk, int &index);
+
+
+int predictiveTable [F+1][DOLLAR+1];
+
+
+int convertNonterminaltoInt(string str){
+    int index = -1;
+
+    for (int i=0; i< CAPROW.size(); i++){
+        if (str.at(0) == CAPROW.at(i)){
+            index = i;
+            return i;
+        }
+    }
+    return index;
+}
+
+int convertTokenInputtoRow(Token tk){
+    string str = tk.getContent();
+    char iCheck = str.at(0);
+
+    if (isalpha(iCheck)){
+        return 6;
+    }
+
+    else {
+
+        int index = -1;
+        for (int i=0; i< TERMINALROW.size(); i++){
+            if (str == TERMINALROW.at(i)){
+                return i;
+            }
+        }
+
+        return index;
+    }
+}
+void reverseInputStack(stack<string> &s1, string str){
+    for (int i=str.size()-1; i>= 0; i--){
+        s1.push(str.substr(i,1));
+        //        cout << "pushed " << str.substr(i,1) << endl;
+    }
+}
+
+void initPredictableTable(){
+    for (int i=0; i< F+1; i++){
+        for (int j=0; j< DOLLAR+1; j++){
+            predictiveTable[i][j] = FAIL;
+        }
+    }
+
+    ////table entry 1 [S]['i'] E->i=E
+    predictiveTable[S][ID] = 1;
+
+    ///table entry 2 [E]['('] E->TQ
+    predictiveTable[E][LEFTB] = 2;
+
+    ///table entry 3 [E]['i'] E-> TQ
+    predictiveTable[E][ID] = 2;
+
+    ///table entry 4 [Q]['+'] Q -> +TQ
+    predictiveTable[Q][PLUS] = 3;
+
+    ///table entry 5 [Q]['-']Q -> -TQ
+    predictiveTable[Q][MINUS] = 4;
+
+    ///table entry 6[Q][')'] Q ->epsilon
+    predictiveTable[Q][RIGHTB] = 5;
+
+    ///table entry 7[Q]['$'] Q -> epsilon
+    predictiveTable[Q][DOLLAR] = 5;
+
+    ///table entry 8 [T][(] T- > FR
+    predictiveTable[T][LEFTB] = 6;
+
+    //// table entry 9 [T][i] T -> FR
+    predictiveTable[T][ID] = 6;
+
+    ////table entry 10 [R][*] R -> *FR
+    predictiveTable[R][STAR] = 7;
+
+    ////table entry 10 [R][+] R -> epsilon
+    predictiveTable[R][PLUS] = 9;
+
+    ////table entry 11[R][-] R -> epsilon
+    predictiveTable[R][MINUS] = 9;
+
+    ////table entry 12 [R][/] R -> /FR
+    predictiveTable[R][DIV] = 8;
+
+    ////table entry 12[R][)] R -> epsilon
+    predictiveTable[R][RIGHTB] = 9;
+
+    ////table entry 13 [R][$] R -> epsilon
+    predictiveTable[R][DOLLAR] = 9;
+
+    ////table entry 14 [F][(E)] F -> (E)
+    predictiveTable[F][LEFTB] = 10;
+
+    ////table entry 14[F][i] F -> i
+    predictiveTable[F][ID] = 11;
+
+
+}
+
+void printPredictionTable(){
+    cout << setw(10) << left<< " ";
+    cout << setw(10) << left<< "*";
+    cout << setw(10) << left<< "+";
+    cout << setw(10) << left<< "-";
+    cout << setw(10) << left<< "/";
+    cout << setw(10) << left<< "(";
+    cout << setw(10) << left<< ")";
+    cout << setw(10) << left<< "id";
+    cout << setw(10) << left<< "$";
+    cout << endl;
+
+
+
+    for (int i=0; i< F+1; i++){
+        cout << setw(10) << left<< CAPROW.at(i);
+
+        for (int j=0; j< DOLLAR+1; j++){
+            int rule;
+            rule = predictiveTable[i][j];
+            //            cout << setw(3) << left << rule << " ";
+            cout << setw(10) << left<< productionRules.at(rule);
+
+        }
+        cout << endl;
+    }
+}
+
+void showstack(stack <string> s)
+{
+
+    cout << "\nPRINTING CURRENT STACK\n";
+    while (!s.empty())
+    {
+        cout <<  s.top() << endl;
+        s.pop();
+    }
+    cout << '\n';
+}
+
+bool syntaxAnalyzer(vector<Token> tk) {
+
+    int index = 0;
+    bool result = false;
+    stack<string> s1;
+    int size = tk.size();
+
+
+    if (tk.size() == 0){
+        return true;
+    }
+
+    if (tk.size() == 1 && tk.at(0).getType() == "$"){
+        return true;
+    }
+
+
+    //init stack by pushing $ and S
+    s1.push("$");
+    s1.push("S");
+    showstack(s1);
+
+    while(!s1.empty()){
+
+
+        cout << "token: " << tk.at(index) << endl;
+        if (debug){
+            cout << "top of stack: " << s1.top() << endl;
+        }
+        // top of stack == $ AND last token == $
+        if (tk.at(index).getContent() == "$" && s1.top() == "$"){
+            return true;
+        }
+
+        //top of stack matches token(index)
+        else if (tk.at(index).getContent() == s1.top()){
+            if (debug){
+                cout << "matched token and stack \n";
+            }
+            s1.pop();
+            index++;
+        }
+
+        else if (tk.at(index).getType() == "IDENTIFIER" && s1.top()=="i"){
+            if (debug){
+                cout << "found ID\n";
+            }
+            s1.pop();
+            index++;
+        }
+
+        else if (s1.top() == "EPSILON"){
+            if (debug){
+                cout << "found EPSILON\n";
+            }
+            s1.pop();
+        }
+
+        else{
+
+            if (debug){
+                cout << "else\n";
+            }
+            //get the predictive table row from stack
+            int rowLookUp = convertNonterminaltoInt(s1.top());
+            s1.pop();       //now pop it
+
+            //get the predictive table column from token (input)
+            int columnLookup = convertTokenInputtoRow(tk.at(index));
+
+            if (debug){
+                cout << "row " << rowLookUp << " column " << columnLookup << endl;
+            }
+            //rule number to apply
+            int temprule = predictiveTable[rowLookUp][columnLookup];
+
+            cout << CAPROW.at(rowLookUp) << " --> ";
+
+            cout << productionRules.at(temprule) << endl;
+
+            if(productionRules.at(temprule) == "epsilon"){
+                s1.push("EPSILON");
+            }
+
+            else if(productionRules.at(temprule) == "FAILED"){
+                return false;
+            }
+            
+            else {
+                //add the rule to the stack in reverse order
+                reverseInputStack(s1, productionRules.at(temprule));
+                if (debug){
+                    showstack(s1);
+                }
+            }
+        }
+
+        sleep(1);
+
+
+    }
+
+    return result;
+
+}
+
+
+#endif // SYNTAXANALYZER_H
