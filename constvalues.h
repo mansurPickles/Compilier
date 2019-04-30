@@ -7,6 +7,7 @@
 
 using namespace std;
 int debug = 0;
+int project2 = 1;
 
 int const ROWLENGTH = 10;
 int const COLUMNLENGTH = 10;

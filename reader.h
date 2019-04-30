@@ -19,6 +19,11 @@ void run(string fname){
     //init 2d Array and Vectprs
     initArray();
 
+    if (debug){
+        printPredictionTable();
+        sleep(2);
+    }
+
     ifstream f(fname.c_str());
 
     if (!f.is_open()){
@@ -32,9 +37,18 @@ void run(string fname){
     //main loop
     while(!f.eof())
     {
-
         getline(f,str);
+        string str2;
+        
+        if (project2){
+            for (int i=0; i<str.size(); i++){
+                str2 += str.at(i);
+                str2 += " ";
+            }
+            str = str2;
+        }
         vector<Token> tk = stateMachine(str);
+
         Token temp ("$", "$");
         tk.push_back(temp);
 

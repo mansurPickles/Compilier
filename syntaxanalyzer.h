@@ -248,6 +248,11 @@ bool syntaxAnalyzer(vector<Token> tk) {
 
             //get the predictive table column from token (input)
             int columnLookup = convertTokenInputtoRow(tk.at(index));
+            
+            //bound check
+            if(rowLookUp < 0 || columnLookup < 0){
+                return false;
+            }
 
             if (debug){
                 cout << "row " << rowLookUp << " column " << columnLookup << endl;
@@ -261,6 +266,10 @@ bool syntaxAnalyzer(vector<Token> tk) {
 
             if(productionRules.at(temprule) == "epsilon"){
                 s1.push("EPSILON");
+            }
+
+            else if(productionRules.at(temprule) == "FAILED"){
+                return false;
             }
             else {
                 //add the rule to the stack in reverse order
