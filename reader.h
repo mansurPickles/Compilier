@@ -42,8 +42,11 @@ void run(string fname){
         
         if (project2){
             for (int i=0; i<str.size(); i++){
+
+                if (!isalpha(str.at(i))){
+                    str2 += " ";
+                }
                 str2 += str.at(i);
-                str2 += " ";
             }
             str = str2;
         }
